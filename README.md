@@ -80,6 +80,25 @@ python app.py
 http://localhost:5000
 ```
 ---
+##  Wazuh Setup (Required)
+
+This project requires a running Wazuh environment.
+
+### Requirements:
+- Wazuh Manager (API enabled)
+- Wazuh Agent (installed on monitored system)
+- Elasticsearch / Wazuh Indexer
+
+### Steps:
+
+1. Install Wazuh Manager and Dashboard  
+   👉 https://documentation.wazuh.com/current/installation-guide/
+
+2. Ensure Wazuh API is accessible:
+```
+https://<WAZUH_SERVER_IP>:55000
+```
+---
 ##  Screenshots
 
 ### Dashboard
