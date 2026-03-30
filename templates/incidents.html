@@ -1,0 +1,111 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<h1 class="text-3xl font-bold mb-2">
+    Security <span class="text-blue-500">Incidents</span>
+</h1>
+
+<p class="text-gray-400 mb-8">
+    High severity security events requiring investigation.
+</p>
+
+{% if incidents %}
+
+<!-- INCIDENT SUMMARY -->
+
+{% set total_incidents = incidents | length %}
+{% set critical_count = incidents | selectattr("rule.level","ge",13) | list | length %}
+{% set high_count = total_incidents - critical_count %}
+
+<div class="grid grid-cols-3 gap-6 mb-10">
+
+    <div class="metric-card">
+        <p class="text-gray-400 text-sm">Total Incidents</p>
+        <p class="text-3xl font-bold">{{ total_incidents }}</p>
+    </div>
+
+    <div class="metric-card">
+        <p class="text-gray-400 text-sm">Critical Incidents</p>
+        <p class="text-3xl font-bold text-red-500">
+            {{ critical_count }}
+        </p>
+    </div>
+
+    <div class="metric-card">
+        <p class="text-gray-400 text-sm">High Severity</p>
+        <p class="text-3xl font-bold text-orange-400">
+            {{ high_count }}
+        </p>
+    </div>
+
+</div>
+
+
+<!-- INCIDENT GRID -->
+
+<div class="grid grid-cols-2 gap-6">
+
+{% for incident in incidents %}
+
+{% set level = incident.rule.level %}
+
+<div class="incident-card hover:border-red-500 transition">
+
+<div class="flex justify-between items-center mb-3">
+
+<h2 class="font-semibold text-lg">
+{{ incident.rule.description }}
+</h2>
+
+{% if level >= 13 %}
+<span class="px-2 py-1 text-xs rounded bg-red-900 text-red-400">
+CRITICAL
+</span>
+{% else %}
+<span class="px-2 py-1 text-xs rounded bg-orange-900 text-orange-400">
+HIGH
+</span>
+{% endif %}
+
+</div>
+
+
+<div class="text-sm space-y-2 text-gray-300">
+
+<p>
+<span class="text-gray-400">Agent:</span>
+{{ incident.agent.name }}
+</p>
+
+<p>
+<span class="text-gray-400">Severity Level:</span>
+{{ level }}
+</p>
+
+<p>
+<span class="text-gray-400">Time:</span>
+{{ incident['@timestamp'] }}
+</p>
+
+<p>
+<span class="text-gray-400">Rule Groups:</span>
+{{ incident.rule.groups }}
+</p>
+
+</div>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+{% else %}
+
+<div class="bg-slate-900 border border-slate-800 rounded-xl p-6 text-gray-400">
+No high severity incidents detected.
+</div>
+
+{% endif %}
+
+{% endblock %}

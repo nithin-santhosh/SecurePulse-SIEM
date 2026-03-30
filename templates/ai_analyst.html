@@ -1,0 +1,195 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<h1 class="text-3xl font-bold mb-4">
+AI Security Analyst
+</h1>
+
+<div class="chat-wrapper">
+
+<div id="chat-box" class="chat-box"></div>
+
+<div class="chat-input-area">
+
+<input id="question"
+class="chat-input"
+placeholder="Ask SecurePulse AI (example: summarize today's alerts)">
+
+<button onclick="askAI()" class="send-btn">
+Send
+</button>
+
+</div>
+
+</div>
+
+<style>
+
+.chat-wrapper{
+background:#0f172a;
+padding:20px;
+border-radius:10px;
+height:520px;
+display:flex;
+flex-direction:column;
+}
+
+.chat-box{
+flex:1;
+overflow-y:auto;
+padding:10px;
+}
+
+.message-user{
+background:#2563eb;
+padding:10px 14px;
+border-radius:8px;
+margin:8px 0;
+width:fit-content;
+max-width:60%;
+color:white;
+}
+
+.message-ai{
+background:#1e293b;
+padding:10px 14px;
+border-radius:8px;
+margin:8px 0;
+width:fit-content;
+max-width:70%;
+color:#e2e8f0;
+}
+
+.chat-input-area{
+display:flex;
+margin-top:10px;
+}
+
+.chat-input{
+flex:1;
+padding:10px;
+border-radius:6px;
+border:none;
+background:#020617;
+color:white;
+}
+
+.send-btn{
+background:#3b82f6;
+border:none;
+padding:10px 20px;
+margin-left:10px;
+border-radius:6px;
+color:white;
+cursor:pointer;
+}
+
+.send-btn:hover{
+background:#2563eb;
+}
+
+.message-ai{
+background:#1e293b;
+padding:10px 14px;
+border-radius:8px;
+margin:8px 0;
+max-width:70%;
+color:#e2e8f0;
+line-height:1.5;
+}
+
+</style>
+
+
+<script>
+
+const chatBox = document.getElementById("chat-box");
+
+function addMessage(text, type){
+
+let div = document.createElement("div");
+
+if(type==="user"){
+div.className="message-user";
+div.innerHTML="<strong>You:</strong> "+text;
+}
+else{
+div.className="message-ai";
+text = text.replace(/\n/g,"<br>");
+div.innerHTML="<strong>AI:</strong><br>"+text;
+}
+
+chatBox.appendChild(div);
+
+chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+
+async function askAI(){
+
+let input = document.getElementById("question");
+let question = input.value.trim();
+
+if(!question) return;
+
+addMessage(question,"user");
+
+input.value="";
+
+let loading = document.createElement("div");
+loading.className="message-ai";
+loading.id="loading";
+loading.innerHTML="Analyzing SecurePulse alerts...";
+chatBox.appendChild(loading);
+
+chatBox.scrollTop = chatBox.scrollHeight;
+
+try{
+
+let response = await fetch("/api/ai-analyst",{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({question:question})
+});
+
+let data = await response.json();
+
+document.getElementById("loading").remove();
+
+addMessage(data.response,"ai");
+
+}
+catch(error){
+
+document.getElementById("loading").remove();
+
+addMessage("AI service unavailable","ai");
+
+}
+
+}
+
+
+document.getElementById("question")
+.addEventListener("keypress",function(e){
+if(e.key==="Enter"){
+askAI();
+}
+});
+
+
+window.onload = function(){
+
+addMessage(
+"Hello. I am the SecurePulse AI SOC analyst. Ask questions like:<br>• summarize today's alerts<br>• which host has most alerts<br>• explain suspicious powershell execution",
+"ai"
+);
+
+}
+
+</script>
+
+{% endblock %}

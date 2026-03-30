@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<h1 class="text-3xl font-bold mb-2">
+    Threat <span class="text-blue-500">Intelligence</span>
+</h1>
+
+<p class="text-gray-400 mb-8">
+    Investigate indicators of compromise (IP, domain, hash) using external intelligence sources.
+</p>
+
+
+<!-- IOC SEARCH PANEL -->
+
+<div class="bg-slate-900 border border-slate-800 rounded-xl p-6 mb-8">
+
+<div class="flex gap-4">
+
+<input
+    type="text"
+    id="iocInput"
+    placeholder="Enter IP address, domain or file hash..."
+    class="flex-1 p-3 rounded bg-slate-800 border border-slate-700 text-sm"
+>
+
+<button
+    onclick="lookupIOC()"
+    class="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded text-sm font-semibold"
+>
+Analyze
+</button>
+
+</div>
+
+<p class="text-xs text-gray-500 mt-3">
+Supported indicators: IP addresses, domains, SHA256 hashes
+</p>
+
+</div>
+
+
+<!-- RESULT PANEL -->
+
+<div id="result" class="bg-slate-900 border border-slate-800 rounded-xl p-6 text-gray-300">
+
+<p class="text-gray-500 text-sm">
+Enter an indicator above and click <strong>Analyze</strong> to retrieve threat intelligence data.
+</p>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/threat_intel.js') }}"></script>
+
+{% endblock %}

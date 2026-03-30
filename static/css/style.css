@@ -1,0 +1,98 @@
+/* Sidebar navigation */
+
+.nav-item {
+    display: block;
+    padding: 10px 14px;
+    border-radius: 6px;
+    color: #cbd5f5;
+    transition: all 0.2s;
+}
+
+.nav-item:hover {
+    background: #1e293b;
+    color: #60a5fa;
+}
+
+/* Cards */
+
+.metric-card {
+    background: #1e293b;
+    padding: 22px;
+    border-radius: 10px;
+    border: 1px solid #334155;
+    transition: all 0.2s;
+}
+
+.metric-card:hover {
+    transform: translateY(-2px);
+    border-color: #3b82f6;
+}
+
+/* Alerts table */
+
+.alerts-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.alerts-table th,
+.alerts-table td {
+    padding: 12px;
+    border-bottom: 1px solid #334155;
+}
+
+.alerts-table th {
+    background: #0f172a;
+    text-align: left;
+}
+
+/* Severity colors */
+
+.low {
+    color: #22c55e;
+}
+
+.medium {
+    color: #facc15;
+}
+
+.high {
+    color: #f97316;
+}
+
+.critical {
+    color: #ef4444;
+}
+
+/* Agents */
+
+.agent-card {
+    background: #1e293b;
+    border: 1px solid #334155;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.status-active {
+    color: #22c55e;
+    font-weight: bold;
+}
+
+.status-inactive {
+    color: #ef4444;
+    font-weight: bold;
+}
+
+/* Incidents */
+
+.incident-card {
+    background: #1f1b1b;
+    border: 1px solid #7f1d1d;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.incident-level {
+    color: #ef4444;
+    font-weight: bold;
+}

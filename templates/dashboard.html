@@ -1,0 +1,312 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<h1 class="text-3xl font-bold mb-2">
+    Security <span class="text-blue-500">Overview</span>
+</h1>
+
+<p class="text-gray-400 mb-8">
+    Real-time monitoring of infrastructure and threat landscape.
+</p>
+
+
+<!-- KPI CARDS -->
+
+<div class="grid grid-cols-4 gap-6 mb-10">
+
+    <div class="metric-card">
+        <p class="text-gray-400 text-sm">Total Alerts</p>
+        <p class="text-3xl font-bold">{{ metrics.total_alerts }}</p>
+    </div>
+
+    <div class="metric-card">
+        <p class="text-gray-400 text-sm">Active Agents</p>
+        <p class="text-3xl font-bold text-green-400">
+            {{ metrics.active_agents }}
+        </p>
+    </div>
+
+    <div class="metric-card">
+        <p class="text-gray-400 text-sm">Offline Agents</p>
+        <p class="text-3xl font-bold text-red-400">
+            {{ metrics.offline_agents }}
+        </p>
+    </div>
+
+    <div class="metric-card">
+        <p class="text-gray-400 text-sm">Critical Alerts</p>
+        <p class="text-3xl font-bold text-red-500">
+            {{ metrics.critical }}
+        </p>
+    </div>
+
+</div>
+
+
+<!-- CHARTS SECTION -->
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+
+<!-- SEVERITY DONUT -->
+
+<div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
+
+<h2 class="text-lg font-semibold mb-4">
+Alert Severity Distribution
+</h2>
+
+<div class="flex justify-center items-center h-72">
+<canvas id="alertsChart"></canvas>
+</div>
+
+</div>
+
+
+<!-- ALERT TIMELINE -->
+
+<div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
+
+<h2 class="text-lg font-semibold mb-4">
+Alert Activity Timeline
+</h2>
+
+<div class="h-72">
+<canvas id="timelineChart"></canvas>
+</div>
+
+</div>
+
+</div>
+
+
+<!-- RECENT CRITICAL ALERTS -->
+
+<div class="bg-slate-900 border border-slate-800 rounded-xl p-6 mb-8">
+
+<h2 class="text-lg font-semibold mb-4">
+Recent Critical Alerts
+</h2>
+
+{% if metrics.critical_alerts %}
+
+<table class="w-full text-sm">
+
+<thead class="text-gray-400 border-b border-slate-800">
+<tr>
+<th class="p-2 text-left">Time</th>
+<th class="p-2 text-left">Agent</th>
+<th class="p-2 text-left">Alert</th>
+</tr>
+</thead>
+
+<tbody>
+
+{% for alert in metrics.critical_alerts %}
+
+<tr class="border-b border-slate-800 hover:bg-slate-800">
+
+<td class="p-2 text-gray-400">
+{{ alert.time }}
+</td>
+
+<td class="p-2">
+{{ alert.agent }}
+</td>
+
+<td class="p-2 text-red-400">
+{{ alert.rule }}
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+{% else %}
+
+<p class="text-gray-500">No critical alerts detected.</p>
+
+{% endif %}
+
+</div>
+
+
+<!-- TOP IPS + TOP AGENTS -->
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+<!-- TOP ATTACKING IPS -->
+
+<div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
+
+<h2 class="text-lg font-semibold mb-4">
+Top Attacking IPs
+</h2>
+
+{% if metrics.top_ips %}
+
+<table class="w-full text-sm">
+
+{% for ip in metrics.top_ips %}
+
+<tr class="border-b border-slate-800 hover:bg-slate-800">
+
+<td class="p-2 text-red-400">
+{{ ip.ip }}
+</td>
+
+<td class="p-2 text-right">
+{{ ip.count }} alerts
+</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+{% else %}
+
+<p class="text-gray-500">No attacker data.</p>
+
+{% endif %}
+
+</div>
+
+
+<!-- TOP TARGETED AGENTS -->
+
+<div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
+
+<h2 class="text-lg font-semibold mb-4">
+Top Targeted Agents
+</h2>
+
+{% if metrics.top_agents %}
+
+<table class="w-full text-sm">
+
+{% for agent in metrics.top_agents %}
+
+<tr class="border-b border-slate-800 hover:bg-slate-800">
+
+<td class="p-2">
+{{ agent.agent }}
+</td>
+
+<td class="p-2 text-right">
+{{ agent.count }} alerts
+</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+{% else %}
+
+<p class="text-gray-500">No agent data.</p>
+
+{% endif %}
+
+</div>
+
+</div>
+
+
+<!-- CHART SCRIPTS -->
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+const ctx = document.getElementById('alertsChart');
+
+new Chart(ctx, {
+
+type: 'doughnut',
+
+data: {
+labels: ['Low','Medium','High','Critical'],
+datasets: [{
+data: [
+{{ metrics.low }},
+{{ metrics.medium }},
+{{ metrics.high }},
+{{ metrics.critical }}
+],
+backgroundColor:[
+'#22c55e',
+'#eab308',
+'#f97316',
+'#ef4444'
+],
+borderWidth:0
+}]
+},
+
+options:{
+responsive:true,
+maintainAspectRatio:false,
+
+animation:{
+duration:1200,
+easing:'easeOutQuart'
+},
+
+plugins:{
+legend:{
+position:'bottom',
+labels:{color:'#94a3b8'}
+}
+}
+
+}
+
+});
+
+const timelineCtx = document.getElementById('timelineChart');
+
+new Chart(timelineCtx,{
+
+type:'line',
+
+data:{
+labels: {{ metrics.timeline_labels | safe }},
+datasets:[{
+label:"Alerts",
+data: {{ metrics.timeline_counts | safe }},
+borderColor:"#3b82f6",
+backgroundColor:"rgba(59,130,246,0.2)",
+fill:true,
+tension:0.3
+}]
+},
+
+options:{
+
+animation:{
+duration:1200,
+easing:'easeOutQuart'
+},
+
+plugins:{legend:{display:false}},
+
+scales:{
+x:{ticks:{color:"#94a3b8"}},
+y:{ticks:{color:"#94a3b8"}}
+}
+
+}
+
+});
+
+});
+
+</script>
+
+{% endblock %}

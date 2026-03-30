@@ -1,0 +1,103 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<h1 class="text-3xl font-bold mb-2">
+    Asset <span class="text-blue-500">Agents</span>
+</h1>
+
+<p class="text-gray-400 mb-8">
+    Monitored endpoints connected to the SecurePulse SIEM platform.
+</p>
+
+{% if agents %}
+
+<!-- SUMMARY CARDS -->
+
+{% set active_count = agents | selectattr("status","equalto","active") | list | length %}
+{% set total_count = agents | length %}
+{% set inactive_count = total_count - active_count %}
+
+<div class="grid grid-cols-3 gap-6 mb-10">
+
+    <div class="metric-card">
+        <p class="text-gray-400 text-sm">Total Agents</p>
+        <p class="text-3xl font-bold">{{ total_count }}</p>
+    </div>
+
+    <div class="metric-card">
+        <p class="text-gray-400 text-sm">Active Agents</p>
+        <p class="text-3xl font-bold text-green-400">
+            {{ active_count }}
+        </p>
+    </div>
+
+    <div class="metric-card">
+        <p class="text-gray-400 text-sm">Offline Agents</p>
+        <p class="text-3xl font-bold text-red-400">
+            {{ inactive_count }}
+        </p>
+    </div>
+
+</div>
+
+
+<!-- AGENT GRID -->
+
+<div class="grid grid-cols-3 gap-6">
+
+{% for agent in agents %}
+
+<div class="agent-card hover:border-blue-500 transition">
+
+<div class="flex justify-between items-center mb-3">
+
+<h2 class="font-semibold text-lg">
+{{ agent.name }}
+</h2>
+
+{% if agent.status == "active" %}
+<span class="text-green-400 text-sm font-semibold">
+● Active
+</span>
+{% else %}
+<span class="text-red-400 text-sm font-semibold">
+● Offline
+</span>
+{% endif %}
+
+</div>
+
+<div class="text-sm space-y-2 text-gray-300">
+
+<p>
+<span class="text-gray-400">Agent ID:</span>
+{{ agent.id }}
+</p>
+
+<p>
+<span class="text-gray-400">IP Address:</span>
+{{ agent.ip if agent.ip else "N/A" }}
+</p>
+
+<p>
+<span class="text-gray-400">Operating System:</span>
+{{ agent.os.name if agent.os and agent.os.name else "Unknown" }}
+</p>
+
+</div>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+{% else %}
+
+<div class="bg-slate-900 border border-slate-800 rounded-xl p-6 text-gray-400">
+No agents connected.
+</div>
+
+{% endif %}
+
+{% endblock %}
