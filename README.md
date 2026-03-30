@@ -37,8 +37,15 @@ Web Dashboard (UI)
 
 ##  Screenshots
 
-```markdown
+### Dashboard
 ![Dashboard](docs/dashboard.png)
+
+### Alerts
 ![Alerts](docs/alerts.png)
+
+### Threat Intelligence
 ![Threat Intel](docs/threat.png)
+
+### AI Analysis
 ![AI Analysis](docs/ai.png)
+
