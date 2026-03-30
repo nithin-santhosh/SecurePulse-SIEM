@@ -40,4 +40,5 @@ Web Dashboard (UI)
 ```markdown
 ![Dashboard](docs/dashboard.png)
 ![Alerts](docs/alerts.png)
+![Threat Intel](docs/threat.png)
 ![AI Analysis](docs/ai.png)
