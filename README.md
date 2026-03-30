@@ -98,6 +98,14 @@ This project requires a running Wazuh environment.
 ```
 https://<WAZUH_SERVER_IP>:55000
 ```
+3. Install and connect a Wazuh Agent to the manager
+4. Verify alerts are being generated in Wazuh Dashboard
+5. Update .env file with your Wazuh server details:
+```
+HOST_IP=your_wazuh_server_ip
+MANAGER_PORT=55000
+INDEXER_PORT=9200
+```
 ---
 ##  Screenshots
 
