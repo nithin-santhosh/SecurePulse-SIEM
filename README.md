@@ -61,7 +61,11 @@ pip install -r requirements.txt
 ### 5️⃣ Configure Environment Variables
 #### Create a .env file in the root directory:
 ```
-HOST_IP=your_ip
+GROQ_API_KEY=your_groq_api_key
+VT_API_KEY=your_virustotal_api_key
+
+HOST_IP=your_ip (ubuntu server_ip)
+
 MANAGER_PORT=55000
 INDEXER_PORT=9200
 
@@ -102,9 +106,11 @@ https://<WAZUH_SERVER_IP>:55000
 4. Verify alerts are being generated in Wazuh Dashboard
 5. Update .env file with your Wazuh server details:
 ```
-HOST_IP=your_wazuh_server_ip
-MANAGER_PORT=55000
-INDEXER_PORT=9200
+MANAGER_USER=your_user
+MANAGER_PASS=your_password
+
+INDEXER_USER=your_user
+INDEXER_PASS=your_password
 ```
 ---
 ##  Screenshots
