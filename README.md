@@ -128,12 +128,6 @@ INDEXER_PASS=your_password
 ![AI Analysis](docs/ai.png)
 
 ---
-## Author
-
-Nithin Santhosh
-Cybersecurity Developer | SIEM & Threat Detection
-
----
 
 ## Support 
 
